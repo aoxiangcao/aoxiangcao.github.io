@@ -6,8 +6,40 @@
     <description>Recent content in Posts on NoOne&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 24 Jan 2017 21:52:47 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 25 Jan 2017 19:43:02 +0800</lastBuildDate>
     <atom:link href="https://aoxiangcao.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>1</title>
+      <link>https://aoxiangcao.github.io/posts/imgs/1/</link>
+      <pubDate>Wed, 25 Jan 2017 19:43:02 +0800</pubDate>
+      
+      <guid>https://aoxiangcao.github.io/posts/imgs/1/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Postgres的一些问题</title>
+      <link>https://aoxiangcao.github.io/posts/2017-1-25/</link>
+      <pubDate>Wed, 25 Jan 2017 16:09:28 +0800</pubDate>
+      
+      <guid>https://aoxiangcao.github.io/posts/2017-1-25/</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;postgres的很多命令都和mysql不一样，一段时间不用就忘了，记录在这里，以后留着查看吧。&lt;/li&gt;
+&lt;li&gt;\l list all databases;&lt;/li&gt;
+&lt;li&gt;\c &lt;database name&gt; connection to the database.&lt;/li&gt;
+&lt;li&gt;\dt list all table in databases;&lt;/li&gt;
+&lt;li&gt;postgres的数据备份，postgres的数据部分和恢复，可以用pg_dump和psql。
+也可以直接在pgadmin里运行这样的语句。
+
+&lt;ul&gt;
+&lt;li&gt;备份 ： copy &amp;lsquo;table name&amp;rsquo; to &amp;lsquo;filepath&amp;rsquo;&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;恢复 ： copy &amp;lsquo;table name&amp;rsquo;  from &amp;lsquo;filepath&amp;rsquo;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;这里需要注意的是，会有写入权限的问题，所以，找一个能写入的路径吧，一般/tmp文件夹是777的，可以暂存。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>HUGO搭建个人博客，并托管到github</title>
@@ -24,7 +56,9 @@
 &lt;li&gt;下载的时候就很坑，可能是网络不行吧，deb的包死活下不下来，最后选择了较老版本的deb安装了hugo.&lt;/li&gt;
 &lt;li&gt;下载完主题后，发现本地可以显示，但public下面却没有生成该有的静态页面。后来发现是没有加&amp;ndash;buildDrafts,这是因为，在新建的md文件时，有这样一行 ‘draft = true’也就是说，这个md是作为草稿的。将md文件里的draft改为false后，不加&amp;ndash;buildDrafts参数也是可以的。&lt;/li&gt;
 &lt;li&gt;在托管到github时，发现css文件被浏览器block了，原因是mixed content, 查了一下说是https里有http的内容，浏览器认为是不安全的，所以给你block了，经过排查发现是baseURL里给写成http了，应该是https的。至此，结合上文中的博客内容，托管到github已成功。&lt;/li&gt;
-&lt;li&gt;添加评论系统时，hugo建议的是disqus，但这个时不时被墙，国内访问速度太慢了，所以改成了多说。注册多说不必多说，er&amp;hellip;有点拗口。注册完之后，将disqus下的代码复制，将layout/partial/disqus.html里面的内容替换掉就行了。&lt;/li&gt;
+&lt;li&gt;添加评论系统时，hugo建议的是disqus，但这个时不时被墙，国内访问速度太慢了，所以改成了多说。注册多说不必多说，er&amp;hellip;有点拗口。注册完之后，将disqus下的代码复制，将layout/partial/disqus.html里面的内容替换掉就行了。同时将data-thread-key=&amp;ldquo;{{ .Permalink }}&amp;ldquo;这样设置，用每篇文章的url来做唯一标识，但官方文档中不推荐这样做，目前还没发现问题，发现问题的时候再说吧。&lt;/li&gt;
+&lt;li&gt;disqus的部分截图如下：
+&lt;img src=&#34;imgs/duoshuo1.png&#34; alt=&#34;截图&#34; /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
