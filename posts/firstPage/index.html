@@ -63,7 +63,7 @@
 <li>在托管到github时，发现css文件被浏览器block了，原因是mixed content, 查了一下说是https里有http的内容，浏览器认为是不安全的，所以给你block了，经过排查发现是baseURL里给写成http了，应该是https的。至此，结合上文中的博客内容，托管到github已成功。</li>
 <li>添加评论系统时，hugo建议的是disqus，但这个时不时被墙，国内访问速度太慢了，所以改成了多说。注册多说不必多说，er&hellip;有点拗口。注册完之后，将disqus下的代码复制，将layout/partial/disqus.html里面的内容替换掉就行了。同时将data-thread-key=&ldquo;{{ .Permalink }}&ldquo;这样设置，用每篇文章的url来做唯一标识，但官方文档中不推荐这样做，目前还没发现问题，发现问题的时候再说吧。</li>
 <li>disqus的部分截图如下：
-<img src="imgs/duoshuo1.png" alt="截图" /></li>
+<img src="../imgs/duoshuo1.png" alt="截图" /></li>
 </ul>
 
       </div>

@@ -6,26 +6,8 @@
     <description>Recent content on NoOne&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 25 Jan 2017 19:43:02 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 25 Jan 2017 16:09:28 +0800</lastBuildDate>
     <atom:link href="https://aoxiangcao.github.io/index.xml" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>1</title>
-      <link>https://aoxiangcao.github.io/posts/imgs/1/</link>
-      <pubDate>Wed, 25 Jan 2017 19:43:02 +0800</pubDate>
-      
-      <guid>https://aoxiangcao.github.io/posts/imgs/1/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>1</title>
-      <link>https://aoxiangcao.github.io/imgs/1/</link>
-      <pubDate>Wed, 25 Jan 2017 16:47:00 +0800</pubDate>
-      
-      <guid>https://aoxiangcao.github.io/imgs/1/</guid>
-      <description></description>
-    </item>
     
     <item>
       <title>Postgres的一些问题</title>
@@ -76,7 +58,7 @@
 &lt;li&gt;在托管到github时，发现css文件被浏览器block了，原因是mixed content, 查了一下说是https里有http的内容，浏览器认为是不安全的，所以给你block了，经过排查发现是baseURL里给写成http了，应该是https的。至此，结合上文中的博客内容，托管到github已成功。&lt;/li&gt;
 &lt;li&gt;添加评论系统时，hugo建议的是disqus，但这个时不时被墙，国内访问速度太慢了，所以改成了多说。注册多说不必多说，er&amp;hellip;有点拗口。注册完之后，将disqus下的代码复制，将layout/partial/disqus.html里面的内容替换掉就行了。同时将data-thread-key=&amp;ldquo;{{ .Permalink }}&amp;ldquo;这样设置，用每篇文章的url来做唯一标识，但官方文档中不推荐这样做，目前还没发现问题，发现问题的时候再说吧。&lt;/li&gt;
 &lt;li&gt;disqus的部分截图如下：
-&lt;img src=&#34;imgs/duoshuo1.png&#34; alt=&#34;截图&#34; /&gt;&lt;/li&gt;
+&lt;img src=&#34;../imgs/duoshuo1.png&#34; alt=&#34;截图&#34; /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
