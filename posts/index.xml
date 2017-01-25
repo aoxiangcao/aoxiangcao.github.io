@@ -10,17 +10,21 @@
     <atom:link href="https://aoxiangcao.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>第一篇博客</title>
+      <title>HUGO搭建个人博客，并托管到github</title>
       <link>https://aoxiangcao.github.io/posts/firstPage/</link>
       <pubDate>Tue, 24 Jan 2017 21:52:47 +0800</pubDate>
       
       <guid>https://aoxiangcao.github.io/posts/firstPage/</guid>
       <description>
 
-&lt;h2 id=&#34;这是我的第一篇博客&#34;&gt;这是我的第一篇博客&lt;/h2&gt;
+&lt;h2 id=&#34;hugo建站托管到github&#34;&gt;HUGO建站托管到github&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;天寒地冻的，搞了一下午终于搭好了，真不容易，待会写写总结吧&lt;/li&gt;
+&lt;li&gt;断断续续的弄了一下午加一晚上算是弄好了，按照&lt;a href=&#34;http://blog.coderzh.com/2015/08/29/hugo/&#34;&gt;这篇博客&lt;/a&gt;的内容大致可以走通，就记录一下安装过程中遇到的问题吧。&lt;/li&gt;
+&lt;li&gt;下载的时候就很坑，可能是网络不行吧，deb的包死活下不下来，最后选择了较老版本的deb安装了hugo.&lt;/li&gt;
+&lt;li&gt;下载完主题后，发现本地可以显示，但public下面却没有生成该有的静态页面。后来发现是没有加&amp;ndash;buildDrafts,这是因为，在新建的md文件时，有这样一行 ‘draft = true’也就是说，这个md是作为草稿的。将md文件里的draft改为false后，不加&amp;ndash;buildDrafts参数也是可以的。&lt;/li&gt;
+&lt;li&gt;在托管到github时，发现css文件被浏览器block了，原因是mixed content, 查了一下说是https里有http的内容，浏览器认为是不安全的，所以给你block了，经过排查发现是baseURL里给写成http了，应该是https的。至此，结合上文中的博客内容，托管到github已成功。&lt;/li&gt;
+&lt;li&gt;添加评论系统时，hugo建议的是disqus，但这个时不时被墙，国内访问速度太慢了，所以改成了多说。注册多说不必多说，er&amp;hellip;有点拗口。注册完之后，将disqus下的代码复制，将layout/partial/disqus.html里面的内容替换掉就行了。&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
