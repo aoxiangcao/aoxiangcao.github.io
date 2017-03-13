@@ -65,13 +65,21 @@
 &lt;ul&gt;
 &lt;li&gt;export PATH=${PATH}:/usr/local/texlive/2016/bin/x86_64-linux&lt;br /&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;卸载镜像
+
+&lt;li&gt;&lt;p&gt;卸载镜像&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;cd&lt;/li&gt;
 &lt;li&gt;umount /mnt/&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;至此texlive安装完成。&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;至此texlive安装完成。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;参考&#34;&gt;参考：&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2016-08/133914.htm&#34;&gt;http://www.linuxidc.com/Linux/2016-08/133914.htm&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
