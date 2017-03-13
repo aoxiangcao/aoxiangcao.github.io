@@ -6,8 +6,75 @@
     <description>Recent content on NoOne&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 25 Jan 2017 16:09:28 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 13 Mar 2017 20:39:45 +0800</lastBuildDate>
     <atom:link href="https://aoxiangcao.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>pandoc 及texlive安装</title>
+      <link>https://aoxiangcao.github.io/posts/2017-3-13-pandoc/</link>
+      <pubDate>Mon, 13 Mar 2017 20:39:45 +0800</pubDate>
+      
+      <guid>https://aoxiangcao.github.io/posts/2017-3-13-pandoc/</guid>
+      <description>
+
+&lt;h3 id=&#34;pandoc安装&#34;&gt;pandoc安装&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;最近在开发中使用到pandoc这个工具，关于这个工具的介绍就不再多说了.一个非常强大的格式转换工具，几乎你能想到的格式转换都能给你实现。在使用pandoc的过程中，遇到了很多问题。从安装讲起吧。&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;在ubuntu下的安装其实并没有什么问题，apt-get install pandoc就可以了，然而在将项目迁移到centos6.5环境下时却遇到了一些问题。在yum源里并没有pandoc,于是按照官方文档中的方法安装deb包。&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;在centos下使用alien来安装deb包。命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;ar p $DEB data.tar.gz | sudo tar xvz --strip-components 2 -C /usr/local
+
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中$DEB是你的deb包的位置。
+* 这样安装完成后，执行pandoc命令，报错&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pandoc: error while loading shared libraries: libgmp.so.10: cannot open shared object file: No such file or directory，
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;这是系统中没找到这个共享的lib库，要么是系统中压根没有这个文件，要么是文件位置没在$PATH里面。使用find 或者which 或者locate查看一下，在我这里，由于是新装的系统，所以确实是没有这个文件的，没办法，装吧。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;由于之后工程可能会在没有网络的环境中部署，所以默认离线安装，不得不说各种依赖真是让人头大。经过一系列的依赖解决，最终在centos6.5环境下安装gmp511-5.1.1-7.sdl6.x86_64.rpm,这个又需要environment-modules-3.2.10-3.el6.x86_64.rpm而这个又需要tcl-8.5.7-6.el6.x86_64，这些依赖都安装成功后，发现还是报libgmp.so.10找不到的错误。所以那就是第二个原因了，没在PATH中。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;将文件位置添加到PATH中后，这下总可以了吧，运行试一下，卧槽，还是不行。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;原来XXX.so这种动态链接库和其他的文件还不一样，这里要介绍一个ldconfig命令，也就是用来搜索这些动态链接库的，他默认只搜索/lib/和/usr/lib以及/etc/ld.so.conf里所列的目录下面的库文件。而我所安装的gmp库文件刚好不在里面，于是，在/etc/ld.so.conf里添加gmp的路径。然后执行ldconfig使改动生效，这时候，执行pandoc命令，发现pandoc终于是安装成功了。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;texlive-安装&#34;&gt;texlive 安装&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;pandoc 在转换成pdf格式时，需要使用latex,因为从markdown转pdf,其实是先转换到.tex,然后再进行转换的，于是安装texlive.&lt;/li&gt;
+&lt;li&gt;从yum源中直接安装的texlive版本太旧，07版的，这里，选择离线安装texlive2016版.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://mirrors.ustc.edu.cn/CTAN/systems/texlive/Images/texlive2016.iso&#34;&gt;华中科大镜像&lt;/a&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;首先挂载镜像，
+
+&lt;ul&gt;
+&lt;li&gt;mount texlive2016.iso /mnt/&lt;/li&gt;
+&lt;li&gt;cd /mnt&lt;/li&gt;
+&lt;li&gt;./install-tl&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;输入I，开始安装，安装成功之后，添加环境变量&lt;br /&gt;
+
+&lt;ul&gt;
+&lt;li&gt;export PATH=${PATH}:/usr/local/texlive/2016/bin/x86_64-linux&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;卸载镜像
+
+&lt;ul&gt;
+&lt;li&gt;cd&lt;/li&gt;
+&lt;li&gt;umount /mnt/&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;至此texlive安装完成。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Postgres的一些问题</title>
