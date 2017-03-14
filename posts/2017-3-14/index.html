@@ -100,7 +100,7 @@ $if(mathfont)$
 
 <ul>
 <li>其中，Simsun是我本机安装的中文字体，可以根据自己机器上安装的字体来相应的更改。</li>
-<li>查看本机安装的中文字体的命令为fc-list;lang=zh。如果本机没有安装中文字体，可以在网上任意下载一个中文字体。安装方式很简单，如下：</li>
+<li>查看本机安装的中文字体的命令为fc-list -f &ldquo;%{family}\n&rdquo;  :lang=zh 。如果本机没有安装中文字体，可以在网上任意下载一个中文字体。安装方式很简单，如下：</li>
 <li>在/usr/share/fonts/下建立文件夹如chinese,</li>
 <li>将下载的字体拷贝到文件夹下。</li>
 <li>建立字体缓存，命令如下：
@@ -112,7 +112,7 @@ $if(mathfont)$
 <li>fc-cache -fv</li>
 </ul></li>
 
-<li><p>再次执行fc-list;lang=zh即可看到安装的字体。</p>
+<li><p>再次执行fc-list -f &ldquo;%{family}\n&rdquo;  :lang=zh 即可看到安装的字体。</p>
 
 <h4 id="图片位置乱序的问题">图片位置乱序的问题。</h4></li>
 
