@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title> 使用Pandoc，转换markdown格式到pdf和html格式 &middot; NoOne&#39;s Blog </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="generator" content="Hugo 0.18" />
+
+
+<link rel="stylesheet" href="https://aoxiangcao.github.io/css/vec.css">
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+<link rel="shortcut icon" href="/favicon.ico">
+
+
+<link href="" rel="alternate" type="application/rss+xml" title="NoOne&#39;s Blog" />
+
+</head>
+
+<body>
+  <header>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://aoxiangcao.github.io/">/home/noone&#39;s blog</a>
+      </li>
+      
+      
+      <li class="pull-left current">
+        <a href="/posts">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/contact">~/contact me</a>
+      </li>
+      
+  
+      <li class="pull-right"><a href=""><i class="fa fa-rss"></i></a></li>
+    </ul>
+  </nav>
+</header>
+  <div class="content">
+    
+    
+    <section class="post">
+      <h1 class="post-title"><a href="https://aoxiangcao.github.io/posts/2017-3-14/">使用Pandoc，转换markdown格式到pdf和html格式</a></h1>
+      <span class="post-date">Mar 14, 2017 </span>
+      <div class="post-content">
+        
+
+<h3 id="pandoc-convert-markdown-to-pdf">pandoc convert markdown to pdf</h3>
+
+<ul>
+<li>在按照前一篇文章安装完pandoc和latex之后就可以进行markdown转pdf了，具体命令官网上有介绍就不在赘述，说一下其中的一些问题吧。还是说一下吧，
+pandoc &ndash;latex-engine=xelatex  &ndash;template=../mytemplate.tex -fmarkdown-implicit_figures  {source} -o {destination}具体参数后面介绍。</li>
+</ul>
+
+<h4 id="中文字体的支持问题">中文字体的支持问题</h4>
+
+<p>pandoc默认是对中文字体不支持的，这里我们使用&ndash;latex-engine=xelatex，使用xelatex来进行转换，&ndash;template=mytemplate.tex,使用mytemplate.tex这个模板，模板里是latex的格式定义。
+对于中文的支持，在mytemplate.tex加上</p>
+
+<pre><code>% SUPPORT for Chinese  
+\usepackage{fontspec}     % 允許設定字體
+\usepackage{xeCJK}        % 分開設置中英文字型
+\setCJKmainfont{SimSun}   % 設定中文字型
+\setmainfont{SimSun}     % 設定英文字型
+\setromanfont{SimSun}    % 字型
+\setmonofont{SimSun}
+\linespread{1.2}\selectfont   % 行距
+\XeTeXlinebreaklocale &quot;zh&quot;    % 針對中文自動換行
+\XeTeXlinebreakskip = 0pt plus 1pt % 字與字之間加入0pt至1pt的間距，確保左右對整齊
+\parindent 0em        % 段落縮進
+\setlength{\parskip}{20pt}    % 段落之間的距離
+\ifxetex
+\usepackage{xltxtra,xunicode}
+\fi
+\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+\newcommand{\euro}{€}
+$if(mainfont)$
+\setmainfont{$mainfont$}
+$endif$
+$if(sansfont)$
+\setsansfont{$sansfont$}
+$endif$
+$if(monofont)$
+\setmonofont{$monofont$}
+$endif$
+$if(mathfont)$
+\setmathfont{$mathfont$}
+ $endif$
+ \fi
+</code></pre>
+
+<ul>
+<li>其中，Simsun是我本机安装的中文字体，可以根据自己机器上安装的字体来相应的更改。</li>
+<li>查看本机安装的中文字体的命令为fc-list;lang=zh。如果本机没有安装中文字体，可以在网上任意下载一个中文字体。安装方式很简单，如下：</li>
+<li>在/usr/share/fonts/下建立文件夹如chinese,</li>
+<li>将下载的字体拷贝到文件夹下。</li>
+<li>建立字体缓存，命令如下：
+
+<ul>
+<li>cd /usr/share/fonts/chinese/</li>
+<li>mkfontscale</li>
+<li>mkfontdir</li>
+<li>fc-cache -fv</li>
+</ul></li>
+
+<li><p>再次执行fc-list;lang=zh即可看到安装的字体。</p>
+
+<h4 id="图片位置乱序的问题">图片位置乱序的问题。</h4></li>
+
+<li><p>发现在生成pdf的时候，添加多张图片会产生顺序错乱的问题，google得知，在mytemplate中添加</p></li>
+</ul>
+
+<pre><code>% Overwrite \begin{figure}[htbp] with \begin{figure}[H]  //图片的位置问题
+\usepackage{float}
+\let\origfigure=\figure
+\let\endorigfigure=\endfigure
+\renewenvironment{figure}[1][]{%
+  \origfigure[H]
+  }{%
+    \endorigfigure
+	}
+
+</code></pre>
+
+<ul>
+<li>都是一些latex的语法吧，也不想去深入了解了，加入上面的代码即可解决图片的乱序问题。</li>
+</ul>
+
+<h4 id="页面的边距问题">页面的边距问题。</h4>
+
+<ul>
+<li>生成的pdf发现页面的边距很不合适，google得知，在mytemplate中加入</li>
+</ul>
+
+<pre><code>\usepackage[top=0.5in,inner=0.5in,outer=0.5in,bottom=1in,headheight=3ex,headsep=2ex]{geometry}
+</code></pre>
+
+<ul>
+<li>使用geometry来调整边距。</li>
+</ul>
+
+<h4 id="图片标注问题">图片标注问题</h4>
+
+<ul>
+<li>markdown格式的图片引用转换到pdf或者html等其他格式，会自动给加上标注。</li>
+<li>如&rdquo; <a href="/url/images">image caption</a> &ldquo;则会在图片的下方标注为image caption 如果不想要这个标注，可以
+
+<ul>
+<li>在图片引用的这一行加入别的内容，如 ‘\’.</li>
+<li>可以在转换的时候加上-fmarkdown-implicit_figures参数。</li>
+</ul></li>
+</ul>
+
+<h3 id="pandoc-markdown-to-html">pandoc markdown to html，</h3>
+
+<ul>
+<li>这个好像没什么太多的坑，我的转换命令如下:</li>
+</ul>
+
+<pre><code>pandoc -s -S --toc -c ../pandoc.css -A ../footer.html --latex-engine=xelatex -fmarkdown-implicit_figures  {source}  -o {destination}  
+</code></pre>
+
+<ul>
+<li>其中，&ndash;toc,是生成toc目录，可以去掉这个参数，选择不生成目录，其实我感觉生成的目录确实挺丑的。pandoc.css是生成的html所引用的css,可以根据自己的要求更改。 foot.html是在生成的html下加入footer.</li>
+
+<li><p>好啦，最近pandoc格式转换过程中踩的坑和一些注意的地方大致就这些了。</p>
+
+<h4 id="附">附</h4>
+
+<ul>
+<li><a href="http://omssnbyrh.bkt.clouddn.com/pandoc.css">pandoc.css</a><br /></li>
+<li><a href="http://omssnbyrh.bkt.clouddn.com/mytemplate.tex">mytemplate.tex</a><br /></li>
+<li><a href="http://omssnbyrh.bkt.clouddn.com/simsun.ttc">simsun中文包</a></li>
+</ul></li>
+</ul>
+
+<h3 id="参考">参考</h3>
+
+<ul>
+<li><a href="http://www.cnblogs.com/52linux/archive/2012/03/07/2383422.html">http://www.cnblogs.com/52linux/archive/2012/03/07/2383422.html</a></li>
+<li>别的参考找不到了，非常抱歉。。。</li>
+</ul>
+
+      </div>
+    </section>
+    
+    <section class="pagination clearfix">
+      
+      <a class="btn previous " href="https://aoxiangcao.github.io/posts/2017-3-13-pandoc/"> pandoc 及texlive安装 </a> 
+       
+      
+    </section>
+    
+    
+  </div>
+  
+  <footer>
+  <div class="footer-info">
+    <p>
+      <a href="mailto:aoxiangcao@163.com?subject="><i class="fa fa-envelope-o"></i> aoxiangcao@163.com </a>
+      {
+        <a href="https://gohugo.io/" title="Hugo :: A fast and modern static website engine">Hugo 0.18</a>,
+        <a href="https://github.com/IvanChou/yii.im" title="vec">Vec</a> 
+      }
+      {<a href="http://creativecommons.org/licenses/by-nc-nd/3.0/" title="CC BY-NC-ND 3.0">CC BY-NC-ND 3.0</a>}
+    </p>
+  </div>
+</footer>
+  
+  <script src="https://aoxiangcao.github.io/js/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+  
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'Your Google Analytics tracking code', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+</body>
+
+</html>

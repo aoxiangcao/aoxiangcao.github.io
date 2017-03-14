@@ -6,8 +6,154 @@
     <description>Recent content on NoOne&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 13 Mar 2017 20:39:45 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 14 Mar 2017 16:51:29 +0800</lastBuildDate>
     <atom:link href="https://aoxiangcao.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>使用Pandoc，转换markdown格式到pdf和html格式</title>
+      <link>https://aoxiangcao.github.io/posts/2017-3-14/</link>
+      <pubDate>Tue, 14 Mar 2017 16:51:29 +0800</pubDate>
+      
+      <guid>https://aoxiangcao.github.io/posts/2017-3-14/</guid>
+      <description>
+
+&lt;h3 id=&#34;pandoc-convert-markdown-to-pdf&#34;&gt;pandoc convert markdown to pdf&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;在按照前一篇文章安装完pandoc和latex之后就可以进行markdown转pdf了，具体命令官网上有介绍就不在赘述，说一下其中的一些问题吧。还是说一下吧，
+pandoc &amp;ndash;latex-engine=xelatex  &amp;ndash;template=../mytemplate.tex -fmarkdown-implicit_figures  {source} -o {destination}具体参数后面介绍。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;中文字体的支持问题&#34;&gt;中文字体的支持问题&lt;/h4&gt;
+
+&lt;p&gt;pandoc默认是对中文字体不支持的，这里我们使用&amp;ndash;latex-engine=xelatex，使用xelatex来进行转换，&amp;ndash;template=mytemplate.tex,使用mytemplate.tex这个模板，模板里是latex的格式定义。
+对于中文的支持，在mytemplate.tex加上&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;% SUPPORT for Chinese  
+\usepackage{fontspec}     % 允許設定字體
+\usepackage{xeCJK}        % 分開設置中英文字型
+\setCJKmainfont{SimSun}   % 設定中文字型
+\setmainfont{SimSun}     % 設定英文字型
+\setromanfont{SimSun}    % 字型
+\setmonofont{SimSun}
+\linespread{1.2}\selectfont   % 行距
+\XeTeXlinebreaklocale &amp;quot;zh&amp;quot;    % 針對中文自動換行
+\XeTeXlinebreakskip = 0pt plus 1pt % 字與字之間加入0pt至1pt的間距，確保左右對整齊
+\parindent 0em        % 段落縮進
+\setlength{\parskip}{20pt}    % 段落之間的距離
+\ifxetex
+\usepackage{xltxtra,xunicode}
+\fi
+\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+\newcommand{\euro}{€}
+$if(mainfont)$
+\setmainfont{$mainfont$}
+$endif$
+$if(sansfont)$
+\setsansfont{$sansfont$}
+$endif$
+$if(monofont)$
+\setmonofont{$monofont$}
+$endif$
+$if(mathfont)$
+\setmathfont{$mathfont$}
+ $endif$
+ \fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;其中，Simsun是我本机安装的中文字体，可以根据自己机器上安装的字体来相应的更改。&lt;/li&gt;
+&lt;li&gt;查看本机安装的中文字体的命令为fc-list;lang=zh。如果本机没有安装中文字体，可以在网上任意下载一个中文字体。安装方式很简单，如下：&lt;/li&gt;
+&lt;li&gt;在/usr/share/fonts/下建立文件夹如chinese,&lt;/li&gt;
+&lt;li&gt;将下载的字体拷贝到文件夹下。&lt;/li&gt;
+&lt;li&gt;建立字体缓存，命令如下：
+
+&lt;ul&gt;
+&lt;li&gt;cd /usr/share/fonts/chinese/&lt;/li&gt;
+&lt;li&gt;mkfontscale&lt;/li&gt;
+&lt;li&gt;mkfontdir&lt;/li&gt;
+&lt;li&gt;fc-cache -fv&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;再次执行fc-list;lang=zh即可看到安装的字体。&lt;/p&gt;
+
+&lt;h4 id=&#34;图片位置乱序的问题&#34;&gt;图片位置乱序的问题。&lt;/h4&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;发现在生成pdf的时候，添加多张图片会产生顺序错乱的问题，google得知，在mytemplate中添加&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;% Overwrite \begin{figure}[htbp] with \begin{figure}[H]  //图片的位置问题
+\usepackage{float}
+\let\origfigure=\figure
+\let\endorigfigure=\endfigure
+\renewenvironment{figure}[1][]{%
+  \origfigure[H]
+  }{%
+    \endorigfigure
+	}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;都是一些latex的语法吧，也不想去深入了解了，加入上面的代码即可解决图片的乱序问题。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;页面的边距问题&#34;&gt;页面的边距问题。&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;生成的pdf发现页面的边距很不合适，google得知，在mytemplate中加入&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;\usepackage[top=0.5in,inner=0.5in,outer=0.5in,bottom=1in,headheight=3ex,headsep=2ex]{geometry}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;使用geometry来调整边距。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;图片标注问题&#34;&gt;图片标注问题&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;markdown格式的图片引用转换到pdf或者html等其他格式，会自动给加上标注。&lt;/li&gt;
+&lt;li&gt;如&amp;rdquo; &lt;a href=&#34;https://aoxiangcao.github.io/url/images&#34;&gt;image caption&lt;/a&gt; &amp;ldquo;则会在图片的下方标注为image caption 如果不想要这个标注，可以
+
+&lt;ul&gt;
+&lt;li&gt;在图片引用的这一行加入别的内容，如 ‘\’.&lt;/li&gt;
+&lt;li&gt;可以在转换的时候加上-fmarkdown-implicit_figures参数。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;pandoc-markdown-to-html&#34;&gt;pandoc markdown to html，&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;这个好像没什么太多的坑，我的转换命令如下:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;pandoc -s -S --toc -c ../pandoc.css -A ../footer.html --latex-engine=xelatex -fmarkdown-implicit_figures  {source}  -o {destination}  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;其中，&amp;ndash;toc,是生成toc目录，可以去掉这个参数，选择不生成目录，其实我感觉生成的目录确实挺丑的。pandoc.css是生成的html所引用的css,可以根据自己的要求更改。 foot.html是在生成的html下加入footer.&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;好啦，最近pandoc格式转换过程中踩的坑和一些注意的地方大致就这些了。&lt;/p&gt;
+
+&lt;h4 id=&#34;附&#34;&gt;附&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://omssnbyrh.bkt.clouddn.com/pandoc.css&#34;&gt;pandoc.css&lt;/a&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://omssnbyrh.bkt.clouddn.com/mytemplate.tex&#34;&gt;mytemplate.tex&lt;/a&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://omssnbyrh.bkt.clouddn.com/simsun.ttc&#34;&gt;simsun中文包&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;参考&#34;&gt;参考&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.cnblogs.com/52linux/archive/2012/03/07/2383422.html&#34;&gt;http://www.cnblogs.com/52linux/archive/2012/03/07/2383422.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;别的参考找不到了，非常抱歉。。。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>pandoc 及texlive安装</title>
