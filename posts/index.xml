@@ -60,6 +60,13 @@
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;在上边的分段中，是不是必须要分成4段呢，不是的，我们分成4段是在默认汉明距离为3则相似的前提下的，这是一个以空间换时间的做法。完全可以分成8段，16段，只是存储空间会相应增加。假设汉明距离为7为相似，则分成8段是最优的解。&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h3 id=&#34;参考&#34;&gt;参考：&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.lanceyan.com/tech/arch/simhash_hamming_distance_similarity2-html.html&#34;&gt;http://www.lanceyan.com/tech/arch/simhash_hamming_distance_similarity2-html.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.csdn.net/heiyeshuwu/article/details/44117473&#34;&gt;http://blog.csdn.net/heiyeshuwu/article/details/44117473&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
