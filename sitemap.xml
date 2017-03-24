@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://aoxiangcao.github.io/posts/2017-3-24-simhash/</loc>
+    <lastmod>2017-03-24T20:11:29+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://aoxiangcao.github.io/posts/2017-3-18-lvm/</loc>
     <lastmod>2017-03-18T17:02:27+08:00</lastmod>
   </url>
@@ -33,13 +38,13 @@
   
   <url>
     <loc>https://aoxiangcao.github.io/</loc>
-    <lastmod>2017-03-18T17:02:27+08:00</lastmod>
+    <lastmod>2017-03-24T20:11:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://aoxiangcao.github.io/posts/</loc>
-    <lastmod>2017-03-18T17:02:27+08:00</lastmod>
+    <lastmod>2017-03-24T20:11:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   

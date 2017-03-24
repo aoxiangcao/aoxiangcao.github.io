@@ -6,8 +6,62 @@
     <description>Recent content in Posts on NoOne&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 18 Mar 2017 17:02:27 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 24 Mar 2017 20:11:29 +0800</lastBuildDate>
     <atom:link href="https://aoxiangcao.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>海量数据去重之simhash算法。</title>
+      <link>https://aoxiangcao.github.io/posts/2017-3-24-simhash/</link>
+      <pubDate>Fri, 24 Mar 2017 20:11:29 +0800</pubDate>
+      
+      <guid>https://aoxiangcao.github.io/posts/2017-3-24-simhash/</guid>
+      <description>
+
+&lt;h3 id=&#34;simhash算法之similarity&#34;&gt;SimHash算法之Similarity。&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;前两天上英语课的时候，公众号推送了一篇SimHash算法的介绍，粗略看了一遍之后，又在网上找了些博客，整理在这里。&lt;/li&gt;
+&lt;li&gt;SimHash,根据名称可以看出，是Similarity和Hash的结合，即使用hash算法来计算相似性的一种算法。&lt;/li&gt;
+&lt;li&gt;我们知道，hash函数是将数据映射为一段hash值的函数，其目的在于使两个不同的数据的hash值尽可能的不同。无法用来比较两短数据的相似性的大小。&lt;/li&gt;
+&lt;li&gt;传统的相似度计算算法如余弦相似度，欧式距离等算法在面对大数据量时，要计算两个数据的相似度大小，需要将待计算的数据和库中的所有数据进行一次比较，时间开销是非常大的。&lt;/li&gt;
+&lt;li&gt;simhash算法的出现解决了大数据量下相似度计算的问题。其算法的核心如下
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;分词&lt;/strong&gt;：将一段文章的进行分词，说道分词，其实又是一个很大的方向了，这里先不管了，假设将一段文字很容易的进行了分词，比如：今天天气很好，我要出去玩，假设分词为： ‘今天’，‘天气’，‘’好，‘我要’，‘出去’，‘玩’。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;hash&lt;/strong&gt;:对分词的结果进行hash,得到各自的hash值， 假设，‘今天’：010101,‘天气’：110011, ‘玩’：000111。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;加权&lt;/strong&gt;： 一段文章中不同的词有着不同的权重，最简单的可以根据词出现次数的多少来定义权重，假设上文中的‘今天’权重为1,‘天气’权重为2,‘玩’权重为3.对hash值进行加权，今天：-1 1 -1 1 -1 1, 天气：2 2 -2 -2 2 2.玩：-3 -3 -3 3 3 3.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;合并&lt;/strong&gt;：将加完权的hash值合并得到结果： -2 ,0 -6 -4 4 6.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;降维&lt;/strong&gt;： 将大于0的记为1,其余为0,得到结果：0,0,0,0,1,1,这就是这段文字的hash值。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;通过上面的步骤，我们可以计算出不同文章的hash值，关于相似度的度量，我们使用汉明距离来计算，即两个hash值，相同位上0,1不同的个数。可以使用两段数据异或来计算。通常来说，一段长文本当汉明距离小于3时，我们认为这两段文本是相似的。这里也暴露了simhash算法的一个问题，即在处理短文本时，优势不明显。&lt;/li&gt;
+&lt;li&gt;到这里，相似度是计算成功了，可是怎么处理大数据量的比较呢。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;simhash算法之hash&#34;&gt;Simhash算法之hash。&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;在java中，hash值是用64位的Long来处理的，根据上文中的结论，当汉明距离小于3时，我们认为文本是相似的，这时，我们将64位的hash值分为4段，则对两个相似的文本来说，必然有一段是完全相同的，于是根据hashMap的启发，我们将这样的64位hash值分为4段，以每一个16位的段为key,64位的hash值为value,形成一个hashMap.这样，以空间换时间，空间增大了4倍，（每个hash值要存储4份），&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;存储过程&lt;/strong&gt;：
+
+&lt;ul&gt;
+&lt;li&gt;以16位的一段为key,查找hash表，若对应位置上有数据，将64为的hash值插入到value链表的末端。&lt;/li&gt;
+&lt;li&gt;若对应位置上没有数据，直接插入到链表中。&lt;/li&gt;
+&lt;li&gt;将4段16位的key按上述方式存储。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;查找&lt;/strong&gt;：
+
+&lt;ul&gt;
+&lt;li&gt;将64为hash切成4段，以每段为key,查找hash表，在value表中进行汉明距离的计算，直到找到符合条件的。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;计算下时间复杂度降低了多少：
+
+&lt;ul&gt;
+&lt;li&gt;在不是用hash的时候，假设有5000w条数据，则需要比较5000w次，使用了hash之后，需要查找5000w/2^16=763次，飞跃。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;在上边的分段中，是不是必须要分成4段呢，不是的，我们分成4段是在默认汉明距离为3则相似的前提下的，这是一个以空间换时间的做法。完全可以分成8段，16段，只是存储空间会相应增加。假设汉明距离为7为相似，则分成8段是最优的解。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>linux lvm 介绍及挂载</title>
